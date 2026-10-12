@@ -30,7 +30,11 @@ The encoder is configured as `models.resnet.resnet101` with `pretrained=True`, s
 models/resnet101.pth
 ```
 
-The file is intentionally excluded from Git because it is approximately 179 MB and exceeds GitHub's 100 MB regular-file limit. The source code currently does not record a verified public download URL for this project-specific weight file. Obtain the compatible weight file from the project owner or a trusted project release, then copy it to `models/resnet101.pth` before starting training.
+The file is intentionally excluded from Git because it is approximately 179 MB and exceeds GitHub's 100 MB regular-file limit. The source code does not publish an official UAHC weight-release URL. A public third-party mirror with the matching checksum is available here:
+
+<https://huggingface.co/Chrisathy/CrackNex/resolve/main/resnet101.pth>
+
+This is an external mirror and is not maintained by this repository. Download it only if you trust the source, verify the checksum below, and then copy it to `models/resnet101.pth` before starting training. Otherwise, obtain the compatible weight file from the project owner or another trusted project release.
 
 For the weight file currently used during development:
 
