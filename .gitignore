@@ -1,0 +1,26 @@
+# Python cache and local tooling
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+.env
+
+# Training outputs and local data
+checkpoint/*
+dataset/*
+*.log
+*.out
+
+# Large model weights are kept out of the GitHub repository.
+# Use Git LFS or download/copy the weight separately when needed.
+*.pth
+*.pt
+*.ckpt
+
+# IDE and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,118 @@
+dataset:
+  type: seg_semi
+
+  train:
+    data_list: /
+    data_root: ../dataset/Kvasir-SEG/images/
+    label_root: ../dataset/Kvasir-SEG/masks/
+    labeled: 80
+    unlabeled: 720
+
+    resize: 256
+    workers: 8
+    batch_size: 8
+    aug_u:
+      crop:
+        type: center
+        size: [ 224, 224 ]
+      flip: True
+      GaussianBlur: False
+#      rand_resize: [ 0.5, 1.0 ]
+#      rand_rotation: [ 0.0, 0.0 ]
+      mean: [ 139.454, 150.850, 180.514 ]
+      std: [ 45.523, 41.675, 39.480 ]
+      ignore_label: 255
+      colorjitter: 1.0
+    aug_l:
+      crop:
+        type: center
+        size: [ 224, 224 ]
+      flip: True
+      GaussianBlur: False
+      rand_resize: [ 0.5, 1.0 ]
+      rand_rotation: [ 0.0, 0.0 ]
+      mean: [ 139.454, 150.850, 180.514 ]
+      std: [ 45.523, 41.675, 39.480 ]
+      ignore_label: 255
+      colorjitter: 0.4
+
+  validate:
+    data_list: /
+    data_root: ../dataset/Kvasir-SEG/images/
+    label_root: ../dataset/Kvasir-SEG/masks/
+    resize: 224
+    workers: 8
+    batch_size: 8
+    aug:
+      crop:
+        type: center
+        size: [ 224, 224 ]
+      workers: 8
+      mean: [ 139.454, 150.850, 180.514 ]
+      std: [ 45.523, 41.675, 39.480 ]
+      ignore_label: 255
+
+  test:
+    data_list: /
+    data_root: ../dataset/Kvasir-SEG/images/
+    label_root: ../dataset/Kvasir-SEG/masks/
+    resize: 224
+    workers: 12
+    batch_size: 8
+    aug:
+      workers: 16
+      mean: [ 139.454, 150.850, 180.514 ]
+      std: [ 45.523, 41.675, 39.480 ]
+      ignore_label: 255
+
+
+
+net: # Required.
+  num_classes: 2
+  sync_bn: False
+  ema_decay: 0.99
+  encoder:
+    type: models.resnet.resnet101
+    kwargs:
+      multi_grid: True
+      zero_init_residual: True
+      fpn: True
+      replace_stride_with_dilation: [ False, True, True ]  #layer0...1 is fixed, layer2...4
+  decoder:
+    type: models.decoder.dec_deeplabv3_plus
+    kwargs:
+      inner_planes: 256
+      dilations: [ 6, 12, 18 ]
+
+trainer: # Required.
+
+  epochs: 100
+  sup_only_epoch: 75
+
+  eval_on: True
+  optimizer:
+    type: SGD
+    kwargs:
+      lr: 0.005
+      momentum: 0.9
+      weight_decay: 0.0001
+#    type: adam
+#    kwargs:
+#      lr: 0.0002
+#      weight_decay: 0.0001
+  lr_scheduler:
+#    mode: poly
+#    kwargs:
+#      power: 3
+    mode: cosine
+    kwargs:
+      targetlr: 0.0002
+  sup_loss_weight: [ 1.0, 1.0 ]
+  unsupervised:
+    drop_percent: 95
+
+saver:
+  save_on: True
+  save_dir: ./checkpoint/seg_best_128.pth
+  is_resume: False
+  resume_dir: ./checkpoint/seg_best_128.pth
