@@ -15,7 +15,7 @@ from utils.utils import *
 from utils.lr_setting import *
 from utils.loss_setting_v4 import *
 from models.build_model import creat_model
-from loader import seg2020
+from loders import seg2020
 import numpy as np
 import umap
 import matplotlib.pyplot as plt
